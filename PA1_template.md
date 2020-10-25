@@ -9,7 +9,7 @@ output:
 ```r
 library(dplyr)
 library(ggplot2)
-#library(scales)
+library(scales)
 library(mice)
 ```
 
@@ -37,6 +37,7 @@ total_steps_by_date <- activity %>% group_by(date) %>% summarize(steps=sum(steps
 # 2. Make a histogram of the total number of steps taken each day
 plot1 <- ggplot(activity, aes(x=date, weights=steps)) 
 plot1 <- plot1 + labs(x = "Date", y = "Total Number of Steps Taken")
+plot1 <- plot1 + theme(axis.text.x=element_text(angle=60, hjust=1))
 plot1 + geom_histogram(stat="count")
 ```
 
@@ -106,6 +107,7 @@ total_imputed_steps_by_date <- imputed_activity %>% group_by(date) %>% summarize
 
 plot3 <- ggplot(imputed_activity, aes(x=date, weights=steps)) 
 plot3 <- plot3 + labs(x = "Date", y = "Total Number of Steps Taken")
+plot3 <- plot3 + theme(axis.text.x=element_text(angle=60, hjust=1))
 plot3 + geom_histogram(stat="count")
 ```
 
@@ -124,7 +126,11 @@ The imputed mena and median are slightly higher than the original data.
 
 
 ```r
+# 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
 average_steps_by_interval_weekend <- activity %>% mutate(dow=(as.POSIXlt(date)$wday)) %>% mutate(wd=ifelse((dow > 0 & dow < 6), "weekday", "weekend")) %>% group_by(interval, wd) %>% summarize(mean_steps=mean(steps, na.rm=TRUE))
+
+# 2. Make a panel plot containing a time series plot type = "l" of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
 plot4 <- ggplot(average_steps_by_interval_weekend, aes(interval, mean_steps)) 
 plot4 <- plot4 + facet_grid(wd ~ .)

@@ -9,7 +9,7 @@ output:
 
 library(dplyr)
 library(ggplot2)
-#library(scales)
+library(scales)
 library(mice)
 
 ```
@@ -39,6 +39,7 @@ total_steps_by_date <- activity %>% group_by(date) %>% summarize(steps=sum(steps
 # 2. Make a histogram of the total number of steps taken each day
 plot1 <- ggplot(activity, aes(x=date, weights=steps)) 
 plot1 <- plot1 + labs(x = "Date", y = "Total Number of Steps Taken")
+plot1 <- plot1 + theme(axis.text.x=element_text(angle=60, hjust=1))
 plot1 + geom_histogram(stat="count")
 
 # 3.Calculate and report the mean and median of the total number of steps taken per day
@@ -102,6 +103,7 @@ total_imputed_steps_by_date <- imputed_activity %>% group_by(date) %>% summarize
 
 plot3 <- ggplot(imputed_activity, aes(x=date, weights=steps)) 
 plot3 <- plot3 + labs(x = "Date", y = "Total Number of Steps Taken")
+plot3 <- plot3 + theme(axis.text.x=element_text(angle=60, hjust=1))
 plot3 + geom_histogram(stat="count")
 
 mean_total_imputed_steps <- mean(total_imputed_steps_by_date$steps, na.rm=TRUE)
